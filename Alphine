@@ -1,0 +1,56 @@
+figlet sastra
+check_dnd() {
+    echo "Memeriksa mode Jangan Ganggu..."
+    DND_STATUS=$(getprop persist.sys.dnd_mode)
+    if [ "$DND_STATUS" = "1" ]; then
+        echo "Mode Jangan Ganggu aktif. Mematikannya..."
+        setprop persist.sys.dnd_mode 0
+        echo "Mode Jangan Ganggu dimatikan."
+    else
+        echo "Mode Jangan Ganggu sudah mati."
+    fi
+}
+
+disable_battery_saver() {
+    echo "Memeriksa mode Hemat Baterai..."
+    BATTERY_SAVER=$(dumpsys deviceidle get deep)
+    if [ "$BATTERY_SAVER" = "IDLE" ]; then
+        echo "Mode Hemat Baterai aktif. Mematikannya..."
+        dumpsys battery reset
+        echo "Mode Hemat Baterai dimatikan."
+    else
+        echo "Mode Hemat Baterai sudah mati."
+    fi
+}
+
+restart_device() {
+    echo "Restarting perangkat untuk memulihkan sistem..."
+    reboot
+}
+
+echo "Pilih tindakan yang ingin dilakukan:"
+echo "1) Periksa mode Jangan Ganggu"
+echo "2) Nonaktifkan mode Hemat Baterai"
+echo "3) Restart perangkat"
+echo "4) Keluar"
+
+read -p "Masukkan pilihan Anda (1-4): " pilihan
+
+case $pilihan in
+    1)
+        check_dnd
+        ;;
+    2)
+        disable_battery_saver
+        ;;
+    3)
+        restart_device
+        ;;
+    4)
+        echo "Keluar dari skrip."
+        exit 0
+        ;;
+    *)
+        echo "Pilihan tidak valid."
+        ;;
+esac
